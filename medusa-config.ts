@@ -12,6 +12,11 @@ module.exports = defineConfig({
       jwtSecret: process.env.JWT_SECRET || "supersecret",
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
     },
+    //@ts-ignore
+    workerMode: process.env.WORKER_MODE || "shared",
+  },
+  admin: {
+    disable: process.env.ADMIN_DISABLED === "true" || false
   },
   modules: [
     {
