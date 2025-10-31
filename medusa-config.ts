@@ -2,6 +2,52 @@ import { loadEnv, defineConfig } from "@medusajs/framework/utils";
 
 loadEnv(process.env.NODE_ENV || "development", process.cwd());
 
+const prodOnlyModules = [
+  {
+    resolve: "@medusajs/medusa/caching",
+    options: {
+      providers: [
+        {
+          resolve: "@medusajs/caching-redis",
+          id: "caching-redis",
+          is_default: true,
+          options: {
+            redisUrl: process.env.REDIS_URL,
+          },
+        },
+      ],
+    },
+  },
+  {
+    resolve: "@medusajs/medusa/event-bus-redis",
+    options: { redisUrl: process.env.EVENTS_REDIS_URL },
+  },
+  {
+    resolve: "@medusajs/medusa/workflow-engine-redis",
+
+    options: {
+      redis: {
+        url: process.env.WE_REDIS_URL,
+      },
+    },
+  },
+  {
+    resolve: "@medusajs/medusa/locking",
+    options: {
+      providers: [
+        {
+          resolve: "@medusajs/medusa/locking-redis",
+          id: "locking-redis",
+          is_default: true,
+          options: {
+            redisUrl: process.env.LOCKING_REDIS_URL,
+          },
+        },
+      ],
+    },
+  },
+];
+
 module.exports = defineConfig({
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
@@ -17,7 +63,7 @@ module.exports = defineConfig({
     workerMode: process.env.WORKER_MODE || "shared",
   },
   admin: {
-    disable: process.env.ADMIN_DISABLED === "true" || false
+    disable: process.env.ADMIN_DISABLED === "true" || false,
   },
   modules: [
     {
@@ -40,5 +86,6 @@ module.exports = defineConfig({
         ],
       },
     },
+    ...(process.env.NODE_ENV === "production" ? prodOnlyModules : []),
   ],
 });
