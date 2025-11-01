@@ -24,6 +24,9 @@ RUN npm ci --omit=dev && npm cache clean --force
 FROM node:20-slim AS runtime-base
 ENV NODE_ENV=production
 WORKDIR /app
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends curl \
+  && rm -rf /var/lib/apt/lists/*
 
 FROM runtime-base AS runner
 ENV PORT=9000 \
