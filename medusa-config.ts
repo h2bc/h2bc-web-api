@@ -60,10 +60,10 @@ module.exports = defineConfig({
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
     },
     //@ts-ignore
-    workerMode: process.env.WORKER_MODE || "shared",
+    workerMode: process.env.MEDUSA_WORKER_MODE || "shared",
   },
   admin: {
-    disable: process.env.ADMIN_DISABLED === "true" || false,
+    disable: process.env.DISABLE_MEDUSA_ADMIN === "true",
   },
   modules: [
     {
